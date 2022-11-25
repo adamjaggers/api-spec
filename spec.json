@@ -1,0 +1,772 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mobile App API",
+    "description": "",
+    "version": "0.1"
+  },
+  "paths": {
+    "/approvals": {
+      "get": {
+        "summary": "gets a list of all the approvals that the current user is assigned or have requested",
+        "responses": {
+          "200": {
+            "description": "A JSON array of approvals currently assigned to or requested by requsting user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/approval"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/request": {
+      "post": {
+        "summary": "sends a deal request to the specified email or phone number",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deal_request"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request Sent"
+          }
+        }
+      }
+    },
+    "/deals": {
+      "get": {
+        "summary": "Returns a list of deals.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The number of items to skip before starting to collect the result set",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array of deals based on current auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/deal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "updates an existing deal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deal"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Deal Updated"
+          },
+          "404": {
+            "description": "Deal not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a new deal.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deal"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/deals/{dealId}": {
+      "get": {
+        "summary": "Returns a deal by ID.",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Returns Specificed Deal",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/deal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{dealId}/obligations": {
+      "get": {
+        "summary": "Returns all obligations given a deal ID.",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Returns Specificed Deal Obligations",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "minimum": 1,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/obligation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{dealId}/insights": {
+      "get": {
+        "summary": "Returns all insights given a deal ID.",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Returns Specificed Deal insights",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "minimum": 1,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/insight"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{dealId}/approvals": {
+      "get": {
+        "summary": "Returns all approvals given a deal ID.",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Returns Specificed approvals",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "minimum": 1,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/approval"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/obligations": {
+      "get": {
+        "summary": "Returns a list of obligations for a given user.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The number of items to skip before starting to collect the result set",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array of deals based on current auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/obligation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/transactions": {
+      "get": {
+        "summary": "Returns a list of transations.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The number of items to skip before starting to collect the result set",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array of transactions based on current auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/summary": {
+      "get": {
+        "summary": "Returns a summary of current account.",
+        "responses": {
+          "200": {
+            "description": "A JSON array of transactions based on current auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/account_summary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/payout_request": {
+      "post": {
+        "summary": "Returns a summary of current account.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/account_payout_request_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request Submitted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "deal": {
+        "required": [
+          "contract_date",
+          "contract_source",
+          "contract_type",
+          "id",
+          "owner_id",
+          "payment_amount",
+          "payment_type",
+          "payor_id",
+          "player_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "asd1-34gs-gtas-4576"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "the ID of the user who uploaded the contract",
+            "example": "fgd1-364s-g222-4533"
+          },
+          "contract_date": {
+            "type": "string",
+            "description": "The date stated as the start date in the contract",
+            "format": "date"
+          },
+          "contract_execution_date": {
+            "type": "string",
+            "description": "The latest date at which all parties agreed to the terms",
+            "format": "date"
+          },
+          "contract_end_date": {
+            "type": "string",
+            "description": "If there is a contract end date specified it goes here",
+            "format": "date"
+          },
+          "payor_id": {
+            "type": "string",
+            "description": "ID for the user that created the contract or payed for the deal in the event that the player uploaded the deal",
+            "example": "fgd1-364s-g222-4533"
+          },
+          "payor_name": {
+            "type": "string",
+            "example": "Acme Carwash"
+          },
+          "player_id": {
+            "type": "string",
+            "description": "ID for single player entering this contract",
+            "example": "fgd1-364s-g222-4533"
+          },
+          "player_name": {
+            "type": "string",
+            "description": "Name of the player for the contract",
+            "example": "Jane Doe"
+          },
+          "deal_status": {
+            "type": "string",
+            "description": "Current Status of deal",
+            "example": "ACTIVE",
+            "enum": [
+              "ACTIVE",
+              "CLOSED",
+              "DECLINED",
+              "IN_PROGRESS",
+              "AWAITING_APPROVAL"
+            ]
+          },
+          "payment_type": {
+            "type": "string",
+            "example": "RECURING",
+            "enum": [
+              "RECURRING",
+              "ONE_TYPE"
+            ]
+          },
+          "recurring_payment_frequency": {
+            "type": "string",
+            "description": "How frequently does this obligation / payment occur",
+            "example": "WEEKLY",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "ANNUAL",
+              "NONE"
+            ]
+          },
+          "payment_currency": {
+            "type": "string",
+            "description": "Currency of Contract",
+            "example": "USD"
+          },
+          "payment_amount": {
+            "type": "number",
+            "description": "Payment amount",
+            "example": 12.5
+          },
+          "contract_source": {
+            "type": "string",
+            "description": "Origination of the contract.",
+            "example": "Deal_Builder",
+            "enum": [
+              "Deal_Builder",
+              "Image",
+              "File_Upload",
+              "Integration"
+            ]
+          },
+          "contract_type": {
+            "type": "string",
+            "description": "Tells us generally what kind of deal this is. Social Posts, appearances etc",
+            "example": "APPEARANCE",
+            "enum": [
+              "SOCIAL_POST",
+              "APPEARANCE",
+              "OTHER",
+              "VIDEO_APPEARANCE"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "example": "Appearance at Acme Carwash"
+          },
+          "document_text": {
+            "type": "string",
+            "description": "full text of contract",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+          },
+          "file_id": {
+            "type": "string",
+            "description": "if uploaded file, ID is stored here",
+            "example": "file-1234-asdf-5643-2363"
+          }
+        },
+        "description": "Deal object"
+      },
+      "obligation": {
+        "required": [
+          "deal_id",
+          "id",
+          "obligation_details",
+          "obligation_type",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "OBL-34gs-gtas-4576"
+          },
+          "deal_id": {
+            "type": "string",
+            "example": "DEAL-34gs-gtas-4576"
+          },
+          "due_date": {
+            "type": "string",
+            "description": "The latest date at which the obligation can be met",
+            "format": "date"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "The earliest date at which the obligation can be met",
+            "format": "date"
+          },
+          "obligation_type": {
+            "type": "string",
+            "description": "The nature of the obligation",
+            "enum": [
+              "SOCIAL_POST",
+              "APPEARANCE",
+              "VIRTUAL_APPEARANCE",
+              "CONTENT_CREATION",
+              "OTHER"
+            ]
+          },
+          "obligation_details": {
+            "type": "string",
+            "description": "a text description of the details of the obligation",
+            "example": "Must post on Facebook using ALC hashtag in the caption"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "WAITING",
+              "COMPLETE",
+              "OVERDUE",
+              "CANCELED",
+              "OTHER"
+            ]
+          }
+        }
+      },
+      "transaction": {
+        "required": [
+          "account_id",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "TRAN-34gs-gtas-4576"
+          },
+          "account_id": {
+            "type": "string",
+            "example": "ACT-34gs-gtas-4576"
+          },
+          "amount": {
+            "type": "number",
+            "example": -1236.32
+          },
+          "name": {
+            "type": "string",
+            "description": "name or description of transaction",
+            "example": "Acme appearance"
+          }
+        }
+      },
+      "insight": {
+        "required": [
+          "deal_id",
+          "id",
+          "insight_severity",
+          "insight_type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "INS-34gs-gtas-4576"
+          },
+          "deal_id": {
+            "type": "string",
+            "example": "DEAL-34gs-gtas-4576"
+          },
+          "highlight_text": {
+            "type": "string",
+            "description": "section of text that should be highlighted for review",
+            "example": "Bob's sporting goods will be your exclusive retailer"
+          },
+          "image_hightlight_bounds": {
+            "type": "array",
+            "description": "Bounds of highlight if the document view is actually an image",
+            "example": [
+              0,
+              0,
+              250,
+              250
+            ],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "insight_type": {
+            "type": "string",
+            "description": "the type of insight",
+            "example": "Exclusivity"
+          },
+          "insight_severity": {
+            "type": "string",
+            "description": "The level of sensitivity of this insight",
+            "example": "CAUTION",
+            "enum": [
+              "INFO",
+              "CAUTION",
+              "WARNING"
+            ]
+          }
+        }
+      },
+      "deal_request": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "RQT-34gs-gtas-4576"
+          },
+          "request_type": {
+            "type": "string",
+            "description": "This tells us whether to send an email or text",
+            "example": "EMAIL",
+            "enum": [
+              "EMIAL",
+              "SMS"
+            ]
+          },
+          "request_destination": {
+            "type": "string",
+            "description": "the email or phone number destination to send the upload request to",
+            "example": "jDoe@yahoo.com"
+          }
+        }
+      },
+      "account_summary": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "ACT-34gs-gtas-4576"
+          },
+          "available_balance": {
+            "type": "number",
+            "description": "Balance earned but not yet distributed to distribution account"
+          },
+          "in_review": {
+            "type": "number",
+            "description": "total balance of money potientally earned by contracts that have not been accepted"
+          },
+          "in_progress": {
+            "type": "number",
+            "description": "total balance of money potientally earned by contracts that have been accepted but have not been completed"
+          },
+          "done_deals": {
+            "type": "number",
+            "description": "total balance of money distributed on platform"
+          }
+        }
+      },
+      "approval": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "ACT-34gs-gtas-4576"
+          },
+          "requesting_student": {
+            "type": "string",
+            "description": "ID of student requesting approval",
+            "example": "ACT-34gs-gtas-4576"
+          },
+          "requesting_contract": {
+            "type": "string",
+            "description": "ID of contract requiring approval",
+            "example": "CNT-34gs-gtas-4576"
+          },
+          "appproving_authority": {
+            "type": "string",
+            "description": "The organization responsible for approving",
+            "example": "UNIVERSITY",
+            "enum": [
+              "UNIVERSITY",
+              "BRAND",
+              "COLLECTIVE",
+              "STUDENT",
+              "OTHER"
+            ]
+          },
+          "assigned_user": {
+            "type": "string",
+            "description": "User ID for user assigned to approve",
+            "example": "ID-34gs-gtas-4576"
+          }
+        }
+      },
+      "account_payout_request_body": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Amount of total balance requested",
+            "example": 1209.65
+          }
+        }
+      }
+    }
+  }
+}
